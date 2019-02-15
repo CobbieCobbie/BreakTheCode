@@ -37,3 +37,6 @@ sysinfo.txt
 
 # Crashlytics generated file
 Assets/StreamingAssets/crashlytics-build.properties
+
+# reference files from GunWick and InputController
+reference/
