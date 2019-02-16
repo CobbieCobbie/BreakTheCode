@@ -4,24 +4,28 @@ using UnityEngine;
 
 public class InputController : MonoBehaviour
 {
-	//Input
-	private bool mouseInputReceived;
+
+    //GameModel.txt
+    private bool moveAll;
+    private bool action;
+    //private Controllable active;
+    //private Controllable[] controllables;
 
     //Movement
-
-    public float speed = 0.25f;
+    public float speed = 0.5f;
     public float x = 0.0f, y = 0.0f;
-    public Transform aim;
 
-    //States
-    public bool player_active = true, npc_active = false;
+    //Mouse input
+    public Vector2 mouseInput;
+    public Vector2 direction;
+    public Vector2 moveDirection;
 
     //Screen
-    private float screenWidth;
+    private float screenWidth, screenHeight;
 
 
     //Random Movement, copied
-	private float nextDecision = 0.0f, coolDownDecisionFor = 1.0f;
+	//private float nextDecision = 0.0f, coolDownDecisionFor = 1.0f;
 
 	private Rigidbody2D rb;
 	private new Transform transform;
@@ -30,46 +34,70 @@ public class InputController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+    	moveDirection = Vector2.zero;
+    	mouseInput = Vector2.zero;
+        screenWidth = Screen.width;
+        screenHeight = Screen.height;
+        transform = GetComponent<Transform>();
+		rb = GetComponent<Rigidbody2D> ();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+    	mouseInput = getMouseInput();
+        faceMouse();
+        handleMovement();
     }
 
     void handleMovement () {
-
+    	moveDirection = Vector2.zero;
+    	Vector2 dir = calcDirection();
+    	if (Input.GetKey(KeyCode.W)){
+    		moveDirection += dir;
+    	}
+    	if (Input.GetKey(KeyCode.A)){
+    		moveDirection += Left(dir);
+    	}
+    	if (Input.GetKey(KeyCode.S)){
+    		moveDirection += Down(dir);
+    	}
+    	if (Input.GetKey(KeyCode.D)){
+    		moveDirection += Right(dir);
+    	}
+    	if (Input.GetKey(KeyCode.Space)){
+    		Action();
+    	}
+    	moveDirection.Normalize();
+    	rb.velocity = moveDirection * speed;// = new Vector2(moveDirection.x * speed, moveDirection.y * speed);
     }
 
-    private bool CheckMouseInput()
-        {
-            //return false;
-            mouseInputReceived = false;
+    private void Action(){
+    	//TODO
+    	Debug.Log("ok cool");
+    }
 
-            //Mouse Input
-            if (Input.GetMouseButtonDown(0))
-            {
-                mouseInputReceived = true;
-                Hit(Input.mousePosition);
-                Click(Input.mousePosition);
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                mouseInputReceived = true;
-                OnRelease(Input.mousePosition);
-                isDragging = false;
-                //Destroy(_pointer);
-                if (Input.mousePosition.x < _screenWidth / 2)
-                {
-                    this.InputReleaseEvent.Invoke();
-                }
-            }
-            else if (isDragging)
-            {
-                Dragging(Input.mousePosition);
-            }
-            return mouseInputReceived;
-        }
+    private Vector3 getMouseInput(){
+    	return Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    }
+
+    private void faceMouse(){
+    	transform.up = calcDirection();
+    }
+
+    private Vector2 calcDirection(){
+    	return new Vector2(mouseInput.x - transform.position.x, mouseInput.y - transform.position.y);
+    }
+
+    private Vector2 Left(Vector2 dir){
+    	return new Vector2(-dir.y, dir.x);
+    }
+
+    private Vector2 Right(Vector2 dir){
+    	return new Vector2(dir.y, -dir.x);
+    }
+
+    private Vector2 Down(Vector2 dir){
+    	return new Vector2(dir.x, -dir.y);
+    }
 }
