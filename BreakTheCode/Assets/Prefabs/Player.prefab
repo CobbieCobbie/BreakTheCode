@@ -15,10 +15,9 @@ GameObject:
   - component: {fileID: 1100866806}
   - component: {fileID: 1100866810}
   - component: {fileID: 1100866811}
-  - component: {fileID: 6223724145102585855}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Controllable
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -115,8 +114,8 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!61 &1100866810
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -150,15 +149,15 @@ HingeJoint2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6594354456986660399}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_EnableCollision: 0
   m_ConnectedRigidBody: {fileID: 0}
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
-  m_AutoConfigureConnectedAnchor: 1
+  m_AutoConfigureConnectedAnchor: 0
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 0}
+  m_ConnectedAnchor: {x: 4.9, y: 1.8}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
@@ -167,21 +166,3 @@ HingeJoint2D:
   m_AngleLimits:
     m_LowerAngle: 0
     m_UpperAngle: 359
---- !u!114 &6223724145102585855
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6594354456986660399}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07fb4a10792029d478c98df5698daa6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 0.5
-  x: 0
-  y: 0
-  mouseInput: {x: 0, y: 0}
-  direction: {x: 0, y: 0}
-  moveDirection: {x: 0, y: 0}

@@ -34,7 +34,7 @@ public class InputController : MonoBehaviour
     private GameObject[] controllables;
     public GameObject
         player,
-        active;
+        selected;
     public string mode = "PLAYER";
 
     // Start is called before the first frame update
@@ -50,47 +50,69 @@ public class InputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch(mode)
+        mouseInput = getMouseInput();
+        ChooseModes();
+        HandleMovement();
+    }
+
+    private void HandleMovement()
+    {
+        if(modeAll())
         {
-            case "ALL":
-                MoveAll();
-                break;
-            case "SELECTED":
-                SelectBody(active);
-                MoveActive(active.transform);
-                break;
-            case "PLAYER":
-                SelectBody(player);
-                MoveActive(player.transform);
-                break;
-            default:
-                break;
+            MoveAll();
+        }
+        else if (modeSelected())
+        {
+            ClearMovement();
+            Move(selected);
+        }
+        else
+        {
+            ClearMovement();
+            Move(player);
+
         }
     }
-    
+
+    private void ClearMovement()
+    {
+        if (modeSelected())
+        {
+            player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            foreach (GameObject controllable in controllables)
+            {
+                if(selected != controllable)
+                {
+                    controllable.GetComponent<Rigidbody2D>();
+                }
+            }
+        } else if (modePlayer())
+        {
+            selected.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            foreach (GameObject controllable in controllables)
+            {
+                if (selected != controllable)
+                {
+                    controllable.GetComponent<Rigidbody2D>();
+                }
+            }
+        }
+    }
 
     private void MoveAll()
     {
-        SelectBody(player);
-        mouseInput = getMouseInput();
-        faceToMouse();
-
-        SelectBody(player);
-        MoveActive(player.transform);
+        Move(player);
         foreach (GameObject controllable in controllables)
         {
-            SelectBody(controllable);
             controllable.transform.rotation = player.transform.rotation;
-            MoveActive(controllable.transform);
+            Move(controllable);
         }
     }
 
-    void MoveActive(Transform active)
+    void Move(GameObject controllable)
     {
-        mouseInput = getMouseInput();
-        faceToMouse();
         moveDirection = Vector2.zero;
-        Vector2 dir =  walkingDirection();
+        Vector2 dir =  walkingDirection(controllable);
         if (Input.GetKey(KeyCode.W))
         {
             moveDirection += dir;
@@ -101,39 +123,71 @@ public class InputController : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.S))
         {
-            moveDirection += Down(dir);
+            moveDirection += -dir;
         }
         if (Input.GetKey(KeyCode.D))
         {
             moveDirection += Right(dir);
         }
-        if (Input.GetKey(KeyCode.Space))
+        if (player == controllable && Input.GetKey(KeyCode.Space))
         {
-            Action();
+            // Action();
         }
         moveDirection.Normalize();
-        rigidbody.velocity = moveDirection * speed;
+        controllable.transform.up = walkingDirection(controllable);
+        controllable.GetComponent<Rigidbody2D>().velocity = moveDirection * speed;
     }
 
-    private void Action()
+    private Vector2 walkingDirection(GameObject controllable)
     {
-        //TODO
-        Debug.Log("ok cool");
-    }
-
-    public void SelectBody(GameObject controllable)
-    {
-        if (controllable)
+        if (modeSelected() || controllable == player)
         {
-            rigidbody = controllable.GetComponent<Rigidbody2D>();
-            transform = controllable.GetComponent<Transform>();
+            return calcDirection();
+        }
+        else
+        {
+            return player.transform.up;
         }
     }
 
-    public void bindControllables(GameObject player, GameObject[] controllables)
+    private void ChooseModes()
+    {
+        float mouseWheelAxis = Input.GetAxis("Mouse ScrollWheel");
+        if (modeAll() && mouseWheelAxis < 0)
+        {
+            mode = "SELECTED";
+        }
+        else if (modeSelected() && mouseWheelAxis > 0)
+        {
+            mode = "ALL";
+        }
+        else if (modeSelected() && mouseWheelAxis < 0)
+        {
+            mode = "PLAYER";
+        }
+        else if (modePlayer() && mouseWheelAxis > 0)
+        {
+            mode = "SELECTED";
+        }
+    }
+
+    private void bindControllables(GameObject player, GameObject[] controllables)
     {
         this.controllables = GameObject.FindGameObjectsWithTag("Controllables");
         this.player = GameObject.FindGameObjectWithTag("Player");
+    }
+
+    private bool modeSelected()
+    {
+        return mode == "SELECTED";
+    }
+    private bool modeAll()
+    {
+        return mode == "ALL";
+    }
+    private bool modePlayer()
+    {
+        return mode == "PLAYER";
     }
 
     private Vector3 getMouseInput()
@@ -141,25 +195,11 @@ public class InputController : MonoBehaviour
         return Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
-    private void faceToMouse()
-    {
-        transform.up = calcDirection();
-    }
-
-    private Vector2 walkingDirection()
-    {
-        if (mode == "SELECTED" || active.Equals(player)) {
-            return calcDirection();
-        }
-        else
-        {
-            return transform.up;
-        }
-    }
-
     private Vector2 calcDirection()
     {     
-        return new Vector2(mouseInput.x - transform.position.x, mouseInput.y - transform.position.y);
+        return modeSelected()
+            ? mouseInput - (Vector2) selected.transform.position
+            : mouseInput - (Vector2) player.transform.position;
     }
 
     private Vector2 Left(Vector2 dir)
@@ -170,10 +210,5 @@ public class InputController : MonoBehaviour
     private Vector2 Right(Vector2 dir)
     {
         return new Vector2(dir.y, -dir.x);
-    }
-
-    private Vector2 Down(Vector2 dir)
-    {
-        return -dir;
     }
 }

@@ -29,7 +29,6 @@ public class SpawnRope : MonoBehaviour
         Vector3 distance = target.position - player.position;
         float step = distance.magnitude/(float) segmentCount;
         distance.Normalize();
-        Debug.Log("Step" + step + " of " + distance.magnitude);
         Vector3 spawnPosition = player.position;
         GameObject segment = null;
         GameObject anchor = player.gameObject;
