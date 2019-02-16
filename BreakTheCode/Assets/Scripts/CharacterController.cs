@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour
+public class Controller : MonoBehaviour
 {
     Rigidbody2D rigidbody;
     public float speed = 0.0f;

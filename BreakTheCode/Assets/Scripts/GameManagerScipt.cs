@@ -5,21 +5,16 @@ using UnityEngine;
 public class GameManagerScipt : MonoBehaviour
 {
     HashSet<Connection> connections = new HashSet<Connection>();
-    CharacterController characterController;
+    Controller inputController;
 
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
+        inputController = GetComponent<Controller>();
         GameObject[] templates = new GameObject[GameObject.FindGameObjectsWithTag("Connection").Length];
         int index = 0;
         foreach (GameObject template in templates)
         {
             connections.Add(template.GetComponent<Connection>());
         }
-    }
-
-    private void Update()
-    {
-        characterController.Control();
     }
 }
