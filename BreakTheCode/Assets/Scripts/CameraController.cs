@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour {
     private static float followSpeed = 4.0f;
     private Vector3 offset;
 
-    void start(){
+    void Start(){
     	offset = transform.position - player.transform.position;
     }
 
