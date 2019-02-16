@@ -13,12 +13,12 @@ public class InputController : MonoBehaviour
 
     //Movement
     public float speed = 0.5f;
-    public float x = 0.0f, y = 0.0f;
+    private float x = 0.0f, y = 0.0f;
 
     //Mouse input
-    public Vector2 mouseInput;
-    public Vector2 direction;
-    public Vector2 moveDirection;
+    public Transform aim;
+    private Vector2 direction;
+    private Vector2 moveDirection;
 
     //Screen
     private float screenWidth, screenHeight;
@@ -30,12 +30,12 @@ public class InputController : MonoBehaviour
 	private Rigidbody2D rb;
 	private new Transform transform;
 
+
     
     // Start is called before the first frame update
     void Start()
     {
     	moveDirection = Vector2.zero;
-    	mouseInput = Vector2.zero;
         screenWidth = Screen.width;
         screenHeight = Screen.height;
         transform = GetComponent<Transform>();
@@ -45,9 +45,13 @@ public class InputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-    	mouseInput = getMouseInput();
+    	//aim.position = getMouseInput();
         faceMouse();
         handleMovement();
+    }
+
+    private void faceMouse(){
+        transform.up = calcDirection();
     }
 
     void handleMovement () {
@@ -74,19 +78,15 @@ public class InputController : MonoBehaviour
 
     private void Action(){
     	//TODO
-    	Debug.Log("ok cool");
+    	Debug.Log("Time4SumAction");
     }
 
-    private Vector3 getMouseInput(){
-    	return Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    }
-
-    private void faceMouse(){
-    	transform.up = calcDirection();
-    }
+    //private Vector3 getMouseInput(){
+    //	return Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    //}
 
     private Vector2 calcDirection(){
-    	return new Vector2(mouseInput.x - transform.position.x, mouseInput.y - transform.position.y);
+    	return new Vector2(aim.position.x - transform.position.x, aim.position.y - transform.position.y);
     }
 
     private Vector2 Left(Vector2 dir){
@@ -98,6 +98,6 @@ public class InputController : MonoBehaviour
     }
 
     private Vector2 Down(Vector2 dir){
-    	return new Vector2(dir.x, -dir.y);
+    	return -dir;
     }
 }

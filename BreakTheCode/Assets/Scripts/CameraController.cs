@@ -4,28 +4,34 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
 
-    private static float followSpeed = 4.0f;
-    public Vector3 offset;
-    private Vector3 cameraPosition;
-    private Transform player;
-    private Transform aim;
+    public float followSpeed = 4.0f;
+    //private Vector3 direction;
+    public Transform player;
+    public Transform aim;
+    private Transform transform;
 
     void start(){
-        offset = transform.position - player.transform.position;
-        cameraPosition = new Vector3(0,0,-10.0f);
+        //direction = Vector3.zero;
+        transform = GetComponent<Transform>();
     }
 
-    /*void Update()
-    {
-        cameraPosition.x = player.transform.position.x;// + offset.x;
-        cameraPosition.y = player.transform.position.y;// + offset.y;
-        this.transform.position = cameraPosition;
-
+    void LateUpdate(){
+        Vector3 direction = calcDirection();
+        Vector3 move = new Vector3(direction.x * followSpeed, direction.y * followSpeed, 0);
+        transform.Translate(move , Space.Self);
         //TODO mal anschauen --> transform.position = Vector3.SmoothDamp(transform.position,)
+    }
+
+    /*void LateUpdate(){
+        Vector3 newPosition = Vector3.zero;
+        calcMean();
+        newPosition.x = transform.position.x + mean.x;
+        newPosition.y = transform.position.y + mean.y;
+        this.transform.position = newPosition;
     }*/
 
-    void LateUpdate(){
-        transform.position = player.transform.position + offset;
+    private Vector3 calcDirection(){
+        return (aim.position - player.position);
     }
 
 }
