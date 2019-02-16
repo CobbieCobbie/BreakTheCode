@@ -23,7 +23,6 @@ public class InputController : MonoBehaviour
     //Screen
     private float screenWidth, screenHeight;
 
-
     //Random Movement, copied
 	//private float nextDecision = 0.0f, coolDownDecisionFor = 1.0f;
 
@@ -45,7 +44,6 @@ public class InputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-    	mouseInput = getMouseInput();
         faceMouse();
         handleMovement();
     }
@@ -98,6 +96,6 @@ public class InputController : MonoBehaviour
     }
 
     private Vector2 Down(Vector2 dir){
-    	return new Vector2(dir.x, -dir.y);
+    	return -dir;
     }
 }

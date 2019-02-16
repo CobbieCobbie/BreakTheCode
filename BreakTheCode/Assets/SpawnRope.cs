@@ -21,6 +21,7 @@ public class SpawnRope : MonoBehaviour
             setRope(player, target);
             trigger = false;
         }
+        Debug.DrawLine(player.position, target.position);
     }
 
     public void setRope(Transform player, Transform target)
@@ -29,13 +30,11 @@ public class SpawnRope : MonoBehaviour
         float step = distance.magnitude/(float) segmentCount;
         distance.Normalize();
         Debug.Log("Step" + step + " of " + distance.magnitude);
-
         Vector3 spawnPosition = player.position;
         GameObject segment = null;
         GameObject anchor = player.gameObject;
 
-        for (int index = 1; index < segmentCount; index++)
-        {
+        for (int index = 1; index < segmentCount; index++) {
             spawnPosition = player.position + distance * step * index;
             segment = Instantiate(segmentFixture, spawnPosition, Quaternion.identity, GetComponent<Transform>());
             segment.GetComponent<Transform>().up = distance;

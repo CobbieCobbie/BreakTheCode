@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
 
-	//public GameObject player;
+	public GameObject player;
     private static float followSpeed = 4.0f;
     private Vector3 offset;
 
