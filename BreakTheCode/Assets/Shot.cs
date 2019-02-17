@@ -22,6 +22,7 @@ public class Shot : MonoBehaviour
                 .FindGameObjectWithTag("GameController")
                 .GetComponent<GameManagerScipt>()
                 .register(target.gameObject);
+            GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>().isKinematic = true;
         }
         GameObject.Destroy(gameObject);
     }
