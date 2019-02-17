@@ -15,11 +15,11 @@ public class InputController : MonoBehaviour
     public float x = 0.0f, y = 0.0f;
 
     //Mouse input
+    public Transform aim;
     public Vector2 mouseInput;
     public Vector2 direction;
     public Vector2 moveDirection;
     
-
     //Screen
     private float screenWidth, screenHeight;
 
@@ -50,7 +50,7 @@ public class InputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        mouseInput = getMouseInput();
+        mouseInput = aim.position;
         ChooseModes();
         HandleMovement();
     }
@@ -189,12 +189,7 @@ public class InputController : MonoBehaviour
     {
         return mode == "PLAYER";
     }
-
-    private Vector3 getMouseInput()
-    {
-        return Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    }
-
+    
     private Vector2 calcDirection()
     {     
         return modeSelected()
