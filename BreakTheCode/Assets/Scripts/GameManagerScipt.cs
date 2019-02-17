@@ -18,7 +18,11 @@ public class GameManagerScipt : MonoBehaviour
 
     public void register(GameObject controllable)
     {
-        inputController.register(controllable);
-        ropes.setRope(player.transform, controllable.transform);
+        if (!inputController.isRegistered(controllable))
+        {
+            inputController.register(controllable);
+            ropes.setRope(player.transform, controllable.transform);
+        }
+        inputController.activate(controllable);
     }
 }

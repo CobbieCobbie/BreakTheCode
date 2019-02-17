@@ -9,6 +9,6 @@ public class Shoot : MonoBehaviour
 
     public void web()
     {
-        Instantiate(webShot, spawnWeb.position, transform.rotation, transform);
+        Instantiate(webShot, spawnWeb.position, transform.rotation, null);
     }
 }

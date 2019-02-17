@@ -148,7 +148,7 @@ public class InputController : MonoBehaviour
         moveDirection.Normalize();
         controllable.transform.up = walkingDirection(controllable);
 
-        controllable.GetComponent<Rigidbody2D>().velocity = walkingDirection(controllable).magnitude < 0.01f
+        controllable.GetComponent<Rigidbody2D>().velocity = Mathf.Abs(calcDirection().magnitude)< 0.1f
             ? Vector2.zero
             : moveDirection * speed;
     }
@@ -184,10 +184,11 @@ public class InputController : MonoBehaviour
 
     public void register(GameObject controllable)
     {
-        if(!isRegistered(controllable))
-        {
-            addToRegistry(controllable);
-        }
+        addToRegistry(controllable);
+    }
+
+    public void activate(GameObject controllable)
+    {
         selected = controllable;
         mode = "SELECTED";
     }
@@ -205,7 +206,7 @@ public class InputController : MonoBehaviour
         controllables = templates;
     }
 
-    private bool isRegistered(GameObject controllable)
+    public bool isRegistered(GameObject controllable)
     {
         foreach (GameObject piece in controllables)
         {
