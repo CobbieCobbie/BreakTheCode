@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JointBreak : MonoBehaviour
+public class StayUnrotaed : MonoBehaviour
 {
     Quaternion rotation;
     void Awake()
@@ -12,9 +12,5 @@ public class JointBreak : MonoBehaviour
     void LateUpdate()
     {
         transform.rotation = rotation;
-    }
-    private void OnJointBreak2D(Joint2D joint)
-    {
-        Debug.Log("Something broke in " + joint);
     }
 }

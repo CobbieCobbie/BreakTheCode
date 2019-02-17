@@ -27,10 +27,11 @@ public class SpawnRope : MonoBehaviour
             Quaternion.identity,
             parent.transform
         );
+        segment.GetComponent<JointBreak>().SetTarget(target.gameObject);
 
         segment.GetComponentInChildren<SpringJoint2D>().distance = adjustment * step;
         segment.GetComponentInChildren<SpringJoint2D>().connectedBody = anchor.GetComponent<Rigidbody2D>();
-        Debug.Log(anchor.name + " connected to " + segment.name);
+ 
         for (int index = 2; index < segmentCount; index++)
         {
             spawnPosition = player.position + distance * step * (float)index;
@@ -41,6 +42,7 @@ public class SpawnRope : MonoBehaviour
                 Quaternion.identity,
                 parent.transform
             );
+            segment.GetComponent<JointBreak>().SetTarget(target.gameObject);
             segment.GetComponentInChildren<SpringJoint2D>().distance = adjustment * step;
             segment.GetComponentInChildren<SpringJoint2D>().connectedBody = anchor.GetComponent<Rigidbody2D>();
             anchor = segment;
@@ -55,6 +57,5 @@ public class SpawnRope : MonoBehaviour
          );
         segment.GetComponentInChildren<SpringJoint2D>().distance = adjustment * step;
         segment.GetComponentInChildren<SpringJoint2D>().connectedBody = anchor.GetComponent<Rigidbody2D>();
-        Debug.Log(anchor.name + " connected to " + segment.name);
     }
 }
