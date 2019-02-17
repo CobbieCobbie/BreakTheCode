@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8111865858733868027}
   - component: {fileID: 8111865858733868025}
   - component: {fileID: 8111865858733868023}
+  - component: {fileID: 1831858628387177986}
   m_Layer: 0
   m_Name: WebShot
   m_TagString: Untagged
@@ -71,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 18186b41ddbecf44a9973906b26d64ca, type: 3}
+  m_Sprite: {fileID: 21300002, guid: 83edbfd2d8e1fed4099f0f3845a58230, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -131,4 +132,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a470400b92356d54a9576533f69cc969, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 2
+--- !u!95 &1831858628387177986
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8111865858733868022}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 129c012262b3c674ebbb991288f8dee1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

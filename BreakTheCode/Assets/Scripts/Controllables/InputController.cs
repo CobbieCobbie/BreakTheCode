@@ -55,9 +55,9 @@ public class InputController : MonoBehaviour
 
     private void HandleAction()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if (modePlayer())
+            if (isModePlayer())
             {
                 player.GetComponent<Shoot>().web();
             }
@@ -66,12 +66,12 @@ public class InputController : MonoBehaviour
 
     private void HandleMovement()
     {
-        if(modeAll())
+        if(isModeAll())
         {
             MoveAll();
             aim.up = player.transform.up;
         }
-        else if (modeSelected())
+        else if (isModeSelected())
         {
             ClearMovement();
             Move(selected);
@@ -87,14 +87,15 @@ public class InputController : MonoBehaviour
 
     private void ClearMovement()
     {
-        if (modeSelected())
+        if (isModeSelected())
         {
             player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             foreach (GameObject controllable in controllables)
             {
                 controllable.GetComponent<Rigidbody2D>();
             }
-        } else if (modePlayer())
+        }
+        else if (isModePlayer())
         {
             if (selected)
             {
@@ -146,12 +147,15 @@ public class InputController : MonoBehaviour
         }
         moveDirection.Normalize();
         controllable.transform.up = walkingDirection(controllable);
-        controllable.GetComponent<Rigidbody2D>().velocity = moveDirection * speed;
+
+        controllable.GetComponent<Rigidbody2D>().velocity = Mathf.Abs(calcDirection().magnitude)< 0.1f
+            ? Vector2.zero
+            : moveDirection * speed;
     }
 
     private Vector2 walkingDirection(GameObject controllable)
     {
-        if (modeSelected() || controllable == player)
+        if (isModeSelected() || controllable == player)
         {
             return calcDirection();
         }
@@ -161,11 +165,9 @@ public class InputController : MonoBehaviour
         }
     }
 
-    
-
     private Vector2 calcDirection()
     {     
-        return modeSelected()
+        return isModeSelected()
             ? mouseInput - (Vector2) selected.transform.position
             : mouseInput - (Vector2) player.transform.position;
     }
@@ -182,10 +184,11 @@ public class InputController : MonoBehaviour
 
     public void register(GameObject controllable)
     {
-        if(!isRegistered(controllable))
-        {
-            addToRegistry(controllable);
-        }
+        addToRegistry(controllable);
+    }
+
+    public void activate(GameObject controllable)
+    {
         selected = controllable;
         mode = "SELECTED";
     }
@@ -203,24 +206,22 @@ public class InputController : MonoBehaviour
         controllables = templates;
     }
 
-    private bool isRegistered(GameObject controllable)
+    public bool isRegistered(GameObject controllable)
     {
         foreach (GameObject piece in controllables)
         {
             if (piece == controllable)
             {
-                Debug.Log("Oh, I know this one!");
                 return true;
             }
         }
-        Debug.Log("Whos dat?");
         return false;
     }
 
     private void HandleModes()
     {
         float mouseWheelAxis = Input.GetAxis("Mouse ScrollWheel");
-        if (modeAll() && selected && mouseWheelAxis < 0)
+        if (isModeAll() && selected && mouseWheelAxis < 0)
         {
             if (selected)
             {
@@ -229,17 +230,20 @@ public class InputController : MonoBehaviour
             else
             {
                 mode = "PLAYER";
+                player.GetComponent<Rigidbody2D>().isKinematic = false;
             }
         }
-        else if (modeSelected() && mouseWheelAxis > 0)
+        else if (isModeSelected() && mouseWheelAxis > 0)
         {
             mode = "ALL";
+            player.GetComponent<Rigidbody2D>().isKinematic = false;
         }
-        else if (modeSelected() && mouseWheelAxis < 0)
+        else if (isModeSelected() && mouseWheelAxis < 0)
         {
             mode = "PLAYER";
+            player.GetComponent<Rigidbody2D>().isKinematic = false;
         }
-        else if (modePlayer() && mouseWheelAxis > 0)
+        else if (isModePlayer() && mouseWheelAxis > 0)
         {
             if (selected)
             {
@@ -258,15 +262,15 @@ public class InputController : MonoBehaviour
         this.player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    private bool modeSelected()
+    private bool isModeSelected()
     {
         return mode == "SELECTED";
     }
-    private bool modeAll()
+    private bool isModeAll ()
     {
         return mode == "ALL";
     }
-    private bool modePlayer()
+    private bool isModePlayer()
     {
         return mode == "PLAYER";
     }

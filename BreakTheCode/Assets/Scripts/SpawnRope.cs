@@ -4,44 +4,57 @@ using UnityEngine;
 
 public class SpawnRope : MonoBehaviour
 {
-    public GameObject fixedSegmentFixture,
-        segmentFixture;
-    public Transform player, target;
+    public GameObject segmentTemplate;
+    public GameObject fixedSegmentTemplate;
+    public GameObject rope;
     public int segmentCount = 10;
     public bool trigger = true;
-    private void Start()
-    {
-        
-    }
-
-    private void Update()
-    {
-        if (trigger)
-        {
-            setRope(player, target);
-            trigger = false;
-        }
-        Debug.DrawLine(player.position, target.position);
-    }
+    
 
     public void setRope(Transform player, Transform target)
     {
+        float adjustment = 0.5f;
+        GameObject parent = Instantiate(rope, transform);
         Vector3 distance = target.position - player.position;
         float step = distance.magnitude/(float) segmentCount;
         distance.Normalize();
-        Vector3 spawnPosition = player.position;
-        GameObject segment = null;
-        GameObject anchor = player.gameObject;
 
-        for (int index = 1; index < segmentCount; index++) {
-            spawnPosition = player.position + distance * step * index;
-            segment = Instantiate(segmentFixture, spawnPosition, Quaternion.identity, GetComponent<Transform>());
-            segment.GetComponent<Transform>().up = distance;
-            anchor.GetComponent<Joint2D>().connectedBody = segment.GetComponent<Rigidbody2D>();
+        Vector3 spawnPosition = player.position + distance * step;
+        GameObject anchor = player.GetChild(1).gameObject;
+        GameObject segment = Instantiate(
+            segmentTemplate, 
+            spawnPosition, 
+            Quaternion.identity,
+            parent.transform
+        );
+
+        segment.GetComponentInChildren<SpringJoint2D>().distance = adjustment * step;
+        segment.GetComponentInChildren<SpringJoint2D>().connectedBody = anchor.GetComponent<Rigidbody2D>();
+        Debug.Log(anchor.name + " connected to " + segment.name);
+        for (int index = 2; index < segmentCount; index++)
+        {
+            spawnPosition = player.position + distance * step * (float)index;
+            anchor = segment;
+            segment = Instantiate(
+                segmentTemplate, 
+                spawnPosition, 
+                Quaternion.identity,
+                parent.transform
+            );
+            segment.GetComponentInChildren<SpringJoint2D>().distance = adjustment * step;
+            segment.GetComponentInChildren<SpringJoint2D>().connectedBody = anchor.GetComponent<Rigidbody2D>();
             anchor = segment;
         }
-        spawnPosition = player.position + distance * step * segmentCount;
-        segment = target.gameObject;
-        anchor.GetComponent<Joint2D>().connectedBody = segment.GetComponent<Rigidbody2D>();
+        spawnPosition = target.position;
+        anchor = segment;
+        segment = Instantiate(
+             fixedSegmentTemplate,
+             spawnPosition,
+             Quaternion.identity,
+             target.transform
+         );
+        segment.GetComponentInChildren<SpringJoint2D>().distance = adjustment * step;
+        segment.GetComponentInChildren<SpringJoint2D>().connectedBody = anchor.GetComponent<Rigidbody2D>();
+        Debug.Log(anchor.name + " connected to " + segment.name);
     }
 }

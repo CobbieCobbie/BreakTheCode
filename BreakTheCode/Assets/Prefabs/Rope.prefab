@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 364256703682748240}
-  - component: {fileID: 1825228230}
+  - component: {fileID: 4875896694552641196}
   m_Layer: 0
   m_Name: Rope
   m_TagString: Untagged
@@ -31,7 +31,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1825228230
+--- !u!114 &4875896694552641196
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,13 +40,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 364256703682748241}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 247d47211f52a52439b850e13dd86b48, type: 3}
+  m_Script: {fileID: 11500000, guid: eeb07c92951f07845b686a956630708a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fixedSegmentFixture: {fileID: 0}
-  segmentFixture: {fileID: 8976106256571528884, guid: 0f1826d60ec80844bbc145a40301f059,
-    type: 3}
-  player: {fileID: 0}
-  target: {fileID: 0}
-  segmentCount: 3
-  trigger: 1
