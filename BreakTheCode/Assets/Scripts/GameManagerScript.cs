@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManagerScipt : MonoBehaviour
+public class GameManagerScript : MonoBehaviour
 {
     InputController inputController;
     SpawnRope ropes;
@@ -24,5 +24,10 @@ public class GameManagerScipt : MonoBehaviour
             ropes.setRope(player.transform, controllable.transform);
         }
         inputController.activate(controllable);
+    }
+
+    public void unregister(GameObject controllable)
+    {
+        inputController.unregister(controllable);
     }
 }

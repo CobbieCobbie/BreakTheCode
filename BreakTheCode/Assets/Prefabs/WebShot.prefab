@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8111865858733868025}
   - component: {fileID: 8111865858733868023}
   - component: {fileID: 1831858628387177986}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: WebShot
   m_TagString: Untagged
   m_Icon: {fileID: 0}

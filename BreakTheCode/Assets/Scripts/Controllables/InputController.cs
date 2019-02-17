@@ -35,6 +35,8 @@ public class InputController : MonoBehaviour
         selected;
     public string mode = "PLAYER";
 
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -57,7 +59,7 @@ public class InputController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if (isModePlayer())
+            if (isModePlayer() || isModeAll())
             {
                 player.GetComponent<Shoot>().web();
             }
@@ -184,17 +186,6 @@ public class InputController : MonoBehaviour
 
     public void register(GameObject controllable)
     {
-        addToRegistry(controllable);
-    }
-
-    public void activate(GameObject controllable)
-    {
-        selected = controllable;
-        mode = "SELECTED";
-    }
-
-    private void addToRegistry(GameObject controllable)
-    {
         GameObject[] templates = new GameObject[controllables.Length + 1];
         int i = 0;
         templates[i] = controllable;
@@ -204,6 +195,43 @@ public class InputController : MonoBehaviour
             templates[i] = piece;
         }
         controllables = templates;
+    }
+    internal void unregister(GameObject controllable)
+    {
+        ClearMovement();
+        GameObject[] templates = new GameObject[controllables.Length - 1];
+        int i = 0;
+        Debug.Log(controllables.Length);
+        if (controllables.Length > 1) {
+            foreach (GameObject piece in controllables)
+            {
+                if (piece != controllable)
+                {
+                    templates[i] = piece;
+                    i++;
+                }
+            }
+        }
+        controllables = templates;
+        Debug.Log(selected);
+        if (selected == controllable)
+        {
+            if (mode == "SELECTED")
+            {
+                mode = "PLAYER";
+            }
+            selected = null;
+        }
+        if (mode == "PLAYER")
+        {
+            player.GetComponent<Rigidbody2D>().isKinematic = false;
+        }
+    }
+
+    public void activate(GameObject controllable)
+    {
+        selected = controllable;
+        mode = "SELECTED";
     }
 
     public bool isRegistered(GameObject controllable)
