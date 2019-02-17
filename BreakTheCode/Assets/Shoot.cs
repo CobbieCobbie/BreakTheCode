@@ -7,8 +7,8 @@ public class Shoot : MonoBehaviour
     public GameObject webShot;
     public Transform spawnWeb;
 
-    void web()
+    public void web()
     {
-
+        Instantiate(webShot, spawnWeb.position, transform.rotation, transform);
     }
 }
