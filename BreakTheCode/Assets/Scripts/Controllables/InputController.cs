@@ -13,7 +13,7 @@ public class InputController : MonoBehaviour
     public float x = 0.0f, y = 0.0f;
 
     //Mouse input
-    public Transform aim;
+    private Transform aim;
     public Vector2 mouseInput;
     public Vector2 direction;
     public Vector2 moveDirection;
@@ -29,17 +29,19 @@ public class InputController : MonoBehaviour
     private new Transform transform;
 
     //GameModel.txt
-    public GameObject[] controllables;
-    public GameObject
+    private GameObject[] controllables = new GameObject[0];
+    private GameObject
         player,
         selected;
-    public string mode = "PLAYER";
+    private string mode = "ALL";
 
     
 
     // Start is called before the first frame update
     void Start()
     {
+        aim = GameObject.FindGameObjectWithTag("Aim").transform;
+        player = GameObject.FindGameObjectWithTag("Player");
         moveDirection = Vector2.zero;
         mouseInput = Vector2.zero;
         screenWidth = Screen.width;
@@ -59,7 +61,7 @@ public class InputController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if (isModePlayer() || isModeAll())
+            if (isModeAll())
             {
                 player.GetComponent<Shoot>().web();
             }
@@ -95,20 +97,6 @@ public class InputController : MonoBehaviour
             foreach (GameObject controllable in controllables)
             {
                 controllable.GetComponent<Rigidbody2D>();
-            }
-        }
-        else if (isModePlayer())
-        {
-            if (selected)
-            {
-                selected.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            }
-            foreach (GameObject controllable in controllables)
-            {
-                if (selected != controllable)
-                {
-                    controllable.GetComponent<Rigidbody2D>();
-                }
             }
         }
     }
@@ -218,11 +206,11 @@ public class InputController : MonoBehaviour
         {
             if (mode == "SELECTED")
             {
-                mode = "PLAYER";
+                mode = "ALL";
             }
             selected = null;
         }
-        if (mode == "PLAYER")
+        if (mode == "ALL")
         {
             player.GetComponent<Rigidbody2D>().isKinematic = false;
         }
@@ -248,39 +236,17 @@ public class InputController : MonoBehaviour
 
     private void HandleModes()
     {
-        float mouseWheelAxis = Input.GetAxis("Mouse ScrollWheel");
-        if (isModeAll() && selected && mouseWheelAxis < 0)
+        if (isModeAll() && selected && Input.GetKey(KeyCode.Space))
         {
             if (selected)
             {
                 mode = "SELECTED";
             }
-            else
-            {
-                mode = "PLAYER";
-                player.GetComponent<Rigidbody2D>().isKinematic = false;
-            }
         }
-        else if (isModeSelected() && mouseWheelAxis > 0)
+        else if (isModeSelected() && !Input.GetKey(KeyCode.Space))
         {
             mode = "ALL";
             player.GetComponent<Rigidbody2D>().isKinematic = false;
-        }
-        else if (isModeSelected() && mouseWheelAxis < 0)
-        {
-            mode = "PLAYER";
-            player.GetComponent<Rigidbody2D>().isKinematic = false;
-        }
-        else if (isModePlayer() && mouseWheelAxis > 0)
-        {
-            if (selected)
-            {
-                mode = "SELECTED";
-            }
-            else
-            {
-                mode = "PLAYER";
-            }
         }
     }
 
@@ -297,9 +263,5 @@ public class InputController : MonoBehaviour
     private bool isModeAll ()
     {
         return mode == "ALL";
-    }
-    private bool isModePlayer()
-    {
-        return mode == "PLAYER";
     }
 }

@@ -5,22 +5,20 @@ using UnityEngine;
 public class Animations : MonoBehaviour
 {
     Animator animator;
+    private Rigidbody2D rigidbody;
     public bool walking = true;
 
     private void Start()
     {
-        animator = GetComponent<Animator>();    
+        animator = GetComponent<Animator>();
+        rigidbody = GetComponent<Rigidbody2D>();
     }
     // Update is called once per frame
     void Update()
     {
-        animator.SetBool("walking", walking);
+        animator.SetBool("walking", rigidbody.velocity.magnitude >= 0.01f);
     }
-
-    public void letsWalk()
-    {
-        walking = true;
-    }
+    
 
     public void letsIdle()
     {
