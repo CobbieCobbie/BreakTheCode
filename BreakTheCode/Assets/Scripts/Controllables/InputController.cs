@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class InputController : MonoBehaviour
 {
-
-
     //private Controllable active;
     //private Controllable[] controllables;
 
@@ -31,7 +29,7 @@ public class InputController : MonoBehaviour
     private new Transform transform;
 
     //GameModel.txt
-    private GameObject[] controllables;
+    public GameObject[] controllables;
     public GameObject
         player,
         selected;
@@ -51,8 +49,22 @@ public class InputController : MonoBehaviour
     void Update()
     {
         mouseInput = aim.position;
-        ChooseModes();
+        HandleModes();
         HandleMovement();
+        HandleAction();
+    }
+
+    private void HandleAction()
+    {
+        if (modePlayer())
+        {
+            ShootWeb();
+        }
+    }
+
+    private void ShootWeb()
+    {
+
     }
 
     private void HandleMovement()
@@ -60,17 +72,19 @@ public class InputController : MonoBehaviour
         if(modeAll())
         {
             MoveAll();
+            aim.up = player.transform.up;
         }
         else if (modeSelected())
         {
             ClearMovement();
             Move(selected);
+            aim.up = selected.transform.up;
         }
         else
         {
             ClearMovement();
             Move(player);
-
+            aim.up = player.transform.up;
         }
     }
 
@@ -88,7 +102,10 @@ public class InputController : MonoBehaviour
             }
         } else if (modePlayer())
         {
-            selected.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            if (selected)
+            {
+                selected.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            }
             foreach (GameObject controllable in controllables)
             {
                 if (selected != controllable)
@@ -150,7 +167,59 @@ public class InputController : MonoBehaviour
         }
     }
 
-    private void ChooseModes()
+    
+
+    private Vector2 calcDirection()
+    {     
+        return modeSelected()
+            ? mouseInput - (Vector2) selected.transform.position
+            : mouseInput - (Vector2) player.transform.position;
+    }
+
+    private Vector2 Left(Vector2 dir)
+    {
+        return new Vector2(-dir.y, dir.x);
+    }
+
+    private Vector2 Right(Vector2 dir)
+    {
+        return new Vector2(dir.y, -dir.x);
+    }
+
+    public void register(GameObject controllable)
+    {
+        if(!isRegistered(controllable))
+        {
+            addToRegistry(controllable);
+        }
+        selected = controllable;
+        mode = "SELECTED";
+    }
+
+    private void addToRegistry(GameObject controllable)
+    {
+        GameObject[] templates = new GameObject[controllables.Length + 1];
+        int i = 0;
+        foreach (GameObject piece in templates)
+        {
+            templates[i++] = piece;
+        }
+        templates[i] = controllable;
+    }
+
+    private bool isRegistered(GameObject controllable)
+    {
+        foreach (GameObject piece in controllables)
+        {
+            if (piece == controllable)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void HandleModes()
     {
         float mouseWheelAxis = Input.GetAxis("Mouse ScrollWheel");
         if (modeAll() && mouseWheelAxis < 0)
@@ -188,22 +257,5 @@ public class InputController : MonoBehaviour
     private bool modePlayer()
     {
         return mode == "PLAYER";
-    }
-    
-    private Vector2 calcDirection()
-    {     
-        return modeSelected()
-            ? mouseInput - (Vector2) selected.transform.position
-            : mouseInput - (Vector2) player.transform.position;
-    }
-
-    private Vector2 Left(Vector2 dir)
-    {
-        return new Vector2(-dir.y, dir.x);
-    }
-
-    private Vector2 Right(Vector2 dir)
-    {
-        return new Vector2(dir.y, -dir.x);
     }
 }

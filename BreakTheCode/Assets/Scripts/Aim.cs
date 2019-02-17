@@ -9,8 +9,8 @@ public class Aim : MonoBehaviour
     {
         transform.position = getPosition();
     }
-    private Vector3 getPosition()
+    private Vector2 getPosition()
     {
-        return Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        return (Vector2) Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 }
