@@ -5,8 +5,11 @@ using UnityEngine;
 public class GameManagerScipt : MonoBehaviour
 {
     InputController inputController;
+    SpawnRope ropes;
+
     private void Start()
     {
+        ropes = GetComponent<SpawnRope>();
         inputController = GetComponent<InputController>();
         Cursor.visible = false;
     }

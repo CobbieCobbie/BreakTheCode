@@ -42,7 +42,6 @@ public class InputController : MonoBehaviour
         mouseInput = Vector2.zero;
         screenWidth = Screen.width;
         screenHeight = Screen.height;
-        controllables = GameObject.FindGameObjectsWithTag("Controllable");
     }
 
     // Update is called once per frame
@@ -56,15 +55,13 @@ public class InputController : MonoBehaviour
 
     private void HandleAction()
     {
-        if (modePlayer())
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            ShootWeb();
+            if (modePlayer())
+            {
+                player.GetComponent<Shoot>().web();
+            }
         }
-    }
-
-    private void ShootWeb()
-    {
-
     }
 
     private void HandleMovement()
@@ -95,10 +92,7 @@ public class InputController : MonoBehaviour
             player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
             foreach (GameObject controllable in controllables)
             {
-                if(selected != controllable)
-                {
-                    controllable.GetComponent<Rigidbody2D>();
-                }
+                controllable.GetComponent<Rigidbody2D>();
             }
         } else if (modePlayer())
         {
@@ -200,11 +194,13 @@ public class InputController : MonoBehaviour
     {
         GameObject[] templates = new GameObject[controllables.Length + 1];
         int i = 0;
-        foreach (GameObject piece in templates)
-        {
-            templates[i++] = piece;
-        }
         templates[i] = controllable;
+        foreach (GameObject piece in controllables)
+        {
+            i++;
+            templates[i] = piece;
+        }
+        controllables = templates;
     }
 
     private bool isRegistered(GameObject controllable)
@@ -213,18 +209,27 @@ public class InputController : MonoBehaviour
         {
             if (piece == controllable)
             {
+                Debug.Log("Oh, I know this one!");
                 return true;
             }
         }
+        Debug.Log("Whos dat?");
         return false;
     }
 
     private void HandleModes()
     {
         float mouseWheelAxis = Input.GetAxis("Mouse ScrollWheel");
-        if (modeAll() && mouseWheelAxis < 0)
+        if (modeAll() && selected && mouseWheelAxis < 0)
         {
-            mode = "SELECTED";
+            if (selected)
+            {
+                mode = "SELECTED";
+            }
+            else
+            {
+                mode = "PLAYER";
+            }
         }
         else if (modeSelected() && mouseWheelAxis > 0)
         {
@@ -236,7 +241,14 @@ public class InputController : MonoBehaviour
         }
         else if (modePlayer() && mouseWheelAxis > 0)
         {
-            mode = "SELECTED";
+            if (selected)
+            {
+                mode = "SELECTED";
+            }
+            else
+            {
+                mode = "PLAYER";
+            }
         }
     }
 

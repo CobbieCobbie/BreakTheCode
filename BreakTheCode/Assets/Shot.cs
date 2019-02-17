@@ -16,7 +16,6 @@ public class Shot : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Collider2D target = collision.collider;
-        Debug.Log(target);
         if (target.tag == "Controllable")
         {
             GameObject
