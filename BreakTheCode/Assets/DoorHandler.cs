@@ -9,6 +9,7 @@ public class DoorHandler : MonoBehaviour
     private bool animateNotGoal = false;
     private bool animateGoal = false, animate = false;
     private float animationTime = 2F, animateUntil = 0.0f;
+    public Transform door;
 
     private void Start()
     {
@@ -17,6 +18,10 @@ public class DoorHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (animateGoal)
+        {
+            door.Translate(0.04f * Vector2.right);
+        }
         if (animate && animateUntil < Time.time)
         {
             Debug.Log("Something fishy");
@@ -45,12 +50,16 @@ public class DoorHandler : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.name == "Card")
+        if(collision.tag == "Controllable" || collision.tag == "Player")
         {
-            animateGoal = true;
-        } else
-        {
-            animateNotGoal = true;
+            if (collision.name == "Controllable-Key")
+            {
+                animateGoal = true;
+            }
+            else
+            {
+                animateNotGoal = true;
+            }
         }
     }
 }

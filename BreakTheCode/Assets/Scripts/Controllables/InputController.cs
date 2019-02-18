@@ -241,12 +241,16 @@ public class InputController : MonoBehaviour
             if (selected)
             {
                 mode = "SELECTED";
+                if (selected.name == "Controllable-Key") {
+                    aim.GetComponent<Aim>().setCardTo(true);
+                }
             }
         }
         else if (isModeSelected() && !Input.GetKey(KeyCode.Space))
         {
             mode = "ALL";
             player.GetComponent<Rigidbody2D>().isKinematic = false;
+            aim.GetComponent<Aim>().setCardTo(false);
         }
     }
 
