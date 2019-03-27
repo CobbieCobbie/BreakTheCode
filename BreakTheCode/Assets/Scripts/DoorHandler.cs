@@ -15,7 +15,7 @@ public class DoorHandler : MonoBehaviour
     {
         spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
     }
-    // Update is called once per frame
+
     void Update()
     {
         if (animateGoal)
@@ -24,7 +24,6 @@ public class DoorHandler : MonoBehaviour
         }
         if (animate && animateUntil < Time.time)
         {
-            Debug.Log("Something fishy");
             spriteRenderer.sprite = null;
             animateNotGoal = false;
             animateGoal = false;
@@ -50,16 +49,13 @@ public class DoorHandler : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "Controllable" || collision.tag == "Player")
+        if (collision.name == "Controllable-Key")
         {
-            if (collision.name == "Controllable-Key")
-            {
-                animateGoal = true;
-            }
-            else
-            {
-                animateNotGoal = true;
-            }
+            animateGoal = true;
+        }
+        else
+        {
+            animateNotGoal = true;
         }
     }
 }

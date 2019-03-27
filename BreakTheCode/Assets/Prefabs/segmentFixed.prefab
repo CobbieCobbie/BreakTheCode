@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5254427330775042771}
   - component: {fileID: 6847252375172266123}
   - component: {fileID: 4126229099848941134}
+  - component: {fileID: 4359108437453013162}
   m_Layer: 8
   m_Name: segmentFixed
   m_TagString: Untagged
@@ -88,7 +89,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8976106256571528884}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -100,7 +101,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 3
 --- !u!231 &6847252375172266123
 SpringJoint2D:
   m_ObjectHideFlags: 0
@@ -118,9 +119,9 @@ SpringJoint2D:
   m_Anchor: {x: 0, y: 0}
   m_ConnectedAnchor: {x: 0, y: 0}
   m_AutoConfigureDistance: 0
-  m_Distance: 1
+  m_Distance: 0.3
   m_DampingRatio: 0
-  m_Frequency: 5
+  m_Frequency: 15
 --- !u!114 &4126229099848941134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,5 +132,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1cf163ec9c9f5a04e85c162b67c56e92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4359108437453013162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8976106256571528884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc4cc4dbdcf7d8144bb3ef1e3da3bcaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -20,7 +20,7 @@ public class Shot : MonoBehaviour
         {
             GameObject
                 .FindGameObjectWithTag("GameController")
-                .GetComponent<GameManagerScript>()
+                .GetComponent<GameController>()
                 .register(target.gameObject);
             GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>().isKinematic = true;
         }

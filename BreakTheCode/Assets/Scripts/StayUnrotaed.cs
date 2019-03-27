@@ -11,6 +11,7 @@ public class StayUnrotaed : MonoBehaviour
     }
     void LateUpdate()
     {
-        transform.rotation = rotation;
+        // transform.rotation = rotation;
+        transform.position = transform.parent.position;
     }
 }

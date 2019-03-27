@@ -12,9 +12,9 @@ public class JointBreak : MonoBehaviour
 
     private void OnJointBreak2D(Joint2D joint)
     {
-        Debug.Log("Something broke in " + joint);
         GameObject.FindGameObjectWithTag("GameController");
-        transform.parent.parent.gameObject.GetComponent<GameManagerScript>().unregister(target);
+        transform.parent.parent.gameObject.GetComponent<GameController>().unregister(target);
+        GameObject.Destroy(target.transform.GetChild(0).gameObject);
         GameObject.Destroy(joint.transform.parent.gameObject);
     }
 }

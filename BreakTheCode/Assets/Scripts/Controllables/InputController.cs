@@ -5,15 +5,12 @@ using UnityEngine;
 
 public class InputController : MonoBehaviour
 {
-    //private Controllable active;
-    //private Controllable[] controllables;
-
     //Movement
+    private bool controlAll = true;
     public float speed = 0.5f;
     public float x = 0.0f, y = 0.0f;
 
     //Mouse input
-    private Transform aim;
     public Vector2 mouseInput;
     public Vector2 direction;
     public Vector2 moveDirection;
@@ -26,29 +23,26 @@ public class InputController : MonoBehaviour
     //private float nextDecision = 0.0f, coolDownDecisionFor = 1.0f;
 
     private Rigidbody2D rigidbody;
-    private new Transform transform;
+    private Transform transform;
 
     //GameModel.txt
     private GameObject[] controllables = new GameObject[0];
     private GameObject
         player,
-        selected;
-    private string mode = "ALL";
-
+        selectedNPC;
+    private Transform aim;
     
-
-    // Start is called before the first frame update
     void Start()
     {
         aim = GameObject.FindGameObjectWithTag("Aim").transform;
         player = GameObject.FindGameObjectWithTag("Player");
+        selectedNPC = null;
         moveDirection = Vector2.zero;
         mouseInput = Vector2.zero;
         screenWidth = Screen.width;
         screenHeight = Screen.height;
     }
 
-    // Update is called once per frame
     void Update()
     {
         mouseInput = aim.position;
@@ -57,47 +51,69 @@ public class InputController : MonoBehaviour
         HandleAction();
     }
 
-    private void HandleAction()
+    public void HandleModes()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (selectedNPC && Input.GetKey(KeyCode.Space))
         {
-            if (isModeAll())
-            {
-                player.GetComponent<Shoot>().web();
-            }
+            controlAll = false;
+        }
+        else if (!Input.GetKey(KeyCode.Space))
+        {
+            controlAll = true;
+            player.GetComponent<Rigidbody2D>().isKinematic = false;
         }
     }
 
     private void HandleMovement()
     {
-        if(isModeAll())
+        if(controlAll)
         {
             MoveAll();
             aim.up = player.transform.up;
         }
-        else if (isModeSelected())
-        {
-            ClearMovement();
-            Move(selected);
-            aim.up = selected.transform.up;
-        }
         else
         {
             ClearMovement();
-            Move(player);
-            aim.up = player.transform.up;
+            Move(selectedNPC);
+            aim.up = selectedNPC.transform.up;
+        }
+    }
+
+    private void HandleAction()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            if (controlAll)
+            {
+                player.GetComponent<Shoot>().web();
+            }
+            else
+            {
+                // Here goes optional NPC Actions
+            }
+        }
+
+        if (!controlAll && Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            for (int i = 0; i < controllables.Length; i++)
+            {
+                if (controllables[i].Equals(selectedNPC))
+                {
+                    Debug.Log("Right click " + selectedNPC);
+                    selectedNPC = controllables[
+                        (i+1)%controllables.Length
+                    ];
+                    break;
+                }
+            }
         }
     }
 
     private void ClearMovement()
     {
-        if (isModeSelected())
+        if (!controlAll)
         {
             player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            foreach (GameObject controllable in controllables)
-            {
-                controllable.GetComponent<Rigidbody2D>();
-            }
         }
     }
 
@@ -138,14 +154,14 @@ public class InputController : MonoBehaviour
         moveDirection.Normalize();
         controllable.transform.up = walkingDirection(controllable);
 
-        controllable.GetComponent<Rigidbody2D>().velocity = Mathf.Abs(calcDirection().magnitude)< 0.1f
+        controllable.GetComponent<Rigidbody2D>().velocity = Mathf.Abs(calcDirection().magnitude) < 0.1f
             ? Vector2.zero
             : moveDirection * speed;
     }
 
     private Vector2 walkingDirection(GameObject controllable)
     {
-        if (isModeSelected() || controllable == player)
+        if (!controlAll || controllable == player)
         {
             return calcDirection();
         }
@@ -157,9 +173,9 @@ public class InputController : MonoBehaviour
 
     private Vector2 calcDirection()
     {     
-        return isModeSelected()
-            ? mouseInput - (Vector2) selected.transform.position
-            : mouseInput - (Vector2) player.transform.position;
+        return controlAll
+            ? mouseInput - (Vector2) player.transform.position 
+            : mouseInput - (Vector2) selectedNPC.transform.position;
     }
 
     private Vector2 Left(Vector2 dir)
@@ -175,51 +191,50 @@ public class InputController : MonoBehaviour
     public void register(GameObject controllable)
     {
         GameObject[] templates = new GameObject[controllables.Length + 1];
-        int i = 0;
-        templates[i] = controllable;
+        templates[0] = controllable;
+        int i = 1;
         foreach (GameObject piece in controllables)
         {
-            i++;
             templates[i] = piece;
+            i++;
         }
         controllables = templates;
     }
-    internal void unregister(GameObject controllable)
+    internal void unregister(GameObject unregisterControllable)
     {
         ClearMovement();
+        unregisterControllable.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         GameObject[] templates = new GameObject[controllables.Length - 1];
         int i = 0;
-        Debug.Log(controllables.Length);
         if (controllables.Length > 1) {
-            foreach (GameObject piece in controllables)
+            foreach (GameObject controllable in controllables)
             {
-                if (piece != controllable)
+                if (controllable != unregisterControllable)
                 {
-                    templates[i] = piece;
+                    templates[i] = controllable;
                     i++;
                 }
             }
         }
         controllables = templates;
-        Debug.Log(selected);
-        if (selected == controllable)
+        if (selectedNPC == unregisterControllable)
         {
-            if (mode == "SELECTED")
+            selectedNPC = null;
+            if (!controlAll)
             {
-                mode = "ALL";
+                controlAll = true;
             }
-            selected = null;
         }
-        if (mode == "ALL")
+        if (controlAll)
         {
             player.GetComponent<Rigidbody2D>().isKinematic = false;
         }
     }
 
-    public void activate(GameObject controllable)
+    public void selectNPC(GameObject controllable)
     {
-        selected = controllable;
-        mode = "SELECTED";
+        selectedNPC = controllable;
+        controlAll = true;
     }
 
     public bool isRegistered(GameObject controllable)
@@ -234,23 +249,14 @@ public class InputController : MonoBehaviour
         return false;
     }
 
-    private void HandleModes()
+    public Transform getSelectedControllable()
     {
-        if (isModeAll() && selected && Input.GetKey(KeyCode.Space))
+        if (controlAll)
         {
-            if (selected)
-            {
-                mode = "SELECTED";
-                if (selected.name == "Controllable-Key") {
-                    aim.GetComponent<Aim>().setCardTo(true);
-                }
-            }
-        }
-        else if (isModeSelected() && !Input.GetKey(KeyCode.Space))
+            return player.transform;
+        } else
         {
-            mode = "ALL";
-            player.GetComponent<Rigidbody2D>().isKinematic = false;
-            aim.GetComponent<Aim>().setCardTo(false);
+            return selectedNPC.transform;
         }
     }
 
@@ -258,14 +264,5 @@ public class InputController : MonoBehaviour
     {
         this.controllables = GameObject.FindGameObjectsWithTag("Controllables");
         this.player = GameObject.FindGameObjectWithTag("Player");
-    }
-
-    private bool isModeSelected()
-    {
-        return mode == "SELECTED";
-    }
-    private bool isModeAll ()
-    {
-        return mode == "ALL";
     }
 }

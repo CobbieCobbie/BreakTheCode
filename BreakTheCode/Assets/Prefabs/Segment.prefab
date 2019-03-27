@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 5254427330775042771}
   - component: {fileID: 6847252375172266123}
   - component: {fileID: 3752141750321132344}
-  - component: {fileID: 7076458666351299655}
   - component: {fileID: 3676534952373942743}
   m_Layer: 8
   m_Name: Segment
@@ -112,17 +111,17 @@ SpringJoint2D:
   m_GameObject: {fileID: 8976106256571528884}
   m_Enabled: 1
   serializedVersion: 4
-  m_EnableCollision: 1
+  m_EnableCollision: 0
   m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: 1000
+  m_BreakForce: 3000
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 0
   m_Anchor: {x: 0, y: 0}
   m_ConnectedAnchor: {x: 0, y: 0}
   m_AutoConfigureDistance: 0
-  m_Distance: 1
+  m_Distance: 0.3
   m_DampingRatio: 0
-  m_Frequency: 10
+  m_Frequency: 7
 --- !u!61 &3752141750321132344
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -149,18 +148,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &7076458666351299655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8976106256571528884}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cf163ec9c9f5a04e85c162b67c56e92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3676534952373942743
 MonoBehaviour:
   m_ObjectHideFlags: 0
